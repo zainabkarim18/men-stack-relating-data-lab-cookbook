@@ -8,10 +8,14 @@ const morgan = require('morgan');
 const session = require('express-session');
 
 const authController = require('./controllers/auth.js');
+const recipesController = require('./controllers/recipes.js');
+const ingredientsController = require('./controllers/ingredients.js');
 
+const isSignedIn = require('./middleware/is-signed-in.js');
+const passUserToView = require('./middleware/pass-user-to-view.js');
 const port = process.env.PORT ? process.env.PORT : '3000';
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URL);
 
 mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
@@ -42,7 +46,12 @@ app.get('/vip-lounge', (req, res) => {
   }
 });
 
+// below middleware
+app.use(passUserToView);
 app.use('/auth', authController);
+app.use(isSignedIn);
+app.use('/recipes', isSignedIn, recipesController);
+app.use('/ingredients', isSignedIn,  ingredientsController);
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);

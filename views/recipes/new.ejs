@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <%- include('../partials/_navbar.ejs') %>
+
+    <form action="/recipes/new/<%=user._id%>" method="POST">
+        <div>
+            <label for="name">Recipe Name: </label>
+            <input type="text" name="name" id="name" />
+        </div>
+        <br />
+
+        <div>
+            <label for="instructions">Instructions: </label>
+            <textarea name="instructions"  id="instructions"></textarea>
+        </div>
+        <br />
+
+       <h2>Add Ingredients</h2>
+
+    <% ingredients.forEach(ingredient => { %>
+      <label>
+        <input type="checkbox" name="ingredients" value="<%= ingredient._id %>">
+        <%= ingredient.name %>
+      </label><br>
+    <% }) %>
+
+    <button type="submit">Add Recipe</button>
+  </form>
+</body>
+</html>
